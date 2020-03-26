@@ -1,0 +1,14 @@
+@mixin item($width, $height) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $width;
+  height: $height;
+  background-color: $mainColor;
+  color: #fff;
+  transition: all 0.2s;
+  &:hover {
+    background-color: #fff;
+    color: $mainColor;
+  }
+}
