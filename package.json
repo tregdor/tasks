@@ -8,10 +8,9 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix"
   },
-  "dependencies": {
-    "eslint-plugin-jsx-a11y": "^6.2.3"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.10.0",
@@ -22,7 +21,8 @@
     "mocha": "^7.1.1",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
-    "chai": "^4.2.0"
+    "sinon": "^9.0.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3"
   },
   "author": "",
   "license": "ISC"
