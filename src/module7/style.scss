@@ -1,0 +1,91 @@
+@import "./utils/vars.scss";
+@import "./utils/normalize";
+@import "./utils/common.scss";
+@import "./utils/mixin.scss";
+
+body {
+  font-family: $mainFont;
+  font-size: $mainSize;
+  color: $mainColor;
+}
+
+header {
+  padding: 10px;
+  background-color: $bgColor;
+  .container {
+    padding-bottom: 20px;
+  }
+}
+
+.logo {
+  display: flex;
+  &__img {
+    width: 70px;
+    height: 70px;
+    background-color: #fff;
+  }
+  &__text {
+    color: lighten($mainColor, 20%);
+    text-transform: uppercase;
+    margin-left: 10px;
+    h1 {
+      font-size: 24px;
+    }
+    h2 {
+      font-size: 14px;
+    }
+  }
+}
+
+.navbar {
+  background-color: $mainColor;
+  &-list {
+    display: flex;
+    .item > * {
+      @include item(100px, 30px);
+      padding: 20px 0;
+      cursor: pointer;
+    }
+  }
+}
+
+.main-content {
+  display: flex;
+  &__menu {
+    padding: 10px;
+    background-color: $bgColor;
+    ul {
+      .item {
+        @include item(200px, 35px);
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  .content {
+    margin: 20px 0 0 10px;
+    &__text {
+      margin-top: 10px;
+    }
+    .subtitle {
+      margin-top: 16px;
+    }
+    .content__list {
+      margin-top: 10px;
+      padding-left: 40px;
+      .item {
+        list-style-type: disc;
+      }
+    }
+  }
+}
+
+footer {
+  position: absolute;
+  width: 100vw;
+  height: 25px;
+  background-color: $mainColor;
+  bottom: 0;
+}
