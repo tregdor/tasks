@@ -8,7 +8,7 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "scss": "node-sass  --watch src/module8/scss/ -o src/module8/css/",
-    "post": "postcss --watch src/module8/css/main.css --use autoprefixer  -o src/module8/css/main.css "
+    "post": "postcss --use autoprefixer -o main.css src/module8/css/main.css"
   },
   "dependencies": {},
   "devDependencies": {
