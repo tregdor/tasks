@@ -6,6 +6,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
   width: 300px;
   &__input{
     width: 190px;
@@ -23,9 +24,10 @@ body {
     border-radius: 5px;
     overflow: auto;
     list-style-type: none;
+    transition: all .6s ease-in;
     &_hidden{
-      display: none;
       height: 0;
+      overflow: hidden;
     }
   }
   &__item{
