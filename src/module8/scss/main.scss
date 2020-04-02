@@ -6,8 +6,6 @@
   padding: 0 10px;
 }
 
-
-
 .authors {
   margin-bottom: 50px;
   &__title {
@@ -71,10 +69,9 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
-
       @supports (display: grid) {
         display: grid;
-        grid-template-columns: minmax(150px,500px) 30px;
+        grid-template-columns: minmax(150px, 500px) 30px;
       }
       &:last-child {
         .item__title {
@@ -89,36 +86,34 @@
         margin-right: 30px;
         margin-left: 40px;
       }
-      .item__page {
-      }
     }
   }
 }
 
-.real-contents{
+.real-contents {
   margin-bottom: 34px;
-  &__text{
+  &__text {
     max-width: 700px;
     margin: 0 0 20px auto;
     text-align: justify;
   }
-  &__subtitle{
+  &__subtitle {
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px;
   }
-  .contents__list{
+  .contents__list {
     margin: 0 0 0 auto;
   }
-  .list__item{
+  .list__item {
     margin: 0 0 10px 0;
-    .item__title{
+    .item__title {
       margin: 0;
     }
   }
 }
 
-.footer{
+.footer {
   font-weight: bold;
   font-size: 20px;
   text-align: right;
