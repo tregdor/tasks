@@ -22,9 +22,10 @@ body {
     padding: 0;
     background: #f7f7f7;
     border-radius: 5px;
-    overflow: auto;
     list-style-type: none;
-    transition: all .6s ease-in;
+    opacity: 1;
+    transition: height  .1s ease-out ;
+    overflow: auto;
     &_hidden{
       height: 0;
       overflow: hidden;

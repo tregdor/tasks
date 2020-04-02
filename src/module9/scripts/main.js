@@ -24,6 +24,7 @@ class Dropdown{
   }
   open(){
     if(this.isOpen) return;
+    this.checkDistanceToBottom();
     this.dropdownInput.focus();
     this.dropdownInput.value = '';
     this.dropdownList.classList.remove("dropdown__items_hidden");
@@ -68,6 +69,13 @@ class Dropdown{
     this.dropdownInput.value = data;
     this.lastSelect = data
   }
+  checkDistanceToBottom(){
+    const coordinateDropdown = this.dropdownList.getBoundingClientRect();
+    const clientHeight = document.documentElement.clientHeight;
+    if(clientHeight - coordinateDropdown.bottom < 150){
+      this.dropdownList.style.order = '-1';
+    }
+  }
 }
 const initState=  [
   {
@@ -98,3 +106,4 @@ const dropdownList = document.querySelector(".dropdown__items");
 const dropdown = new Dropdown(initState,dropdownInput,dropdownBtn,dropdownList);
 
 dropdown.start();
+
