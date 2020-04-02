@@ -1,0 +1,38 @@
+body {
+  padding: 15px;
+}
+
+.dropdown{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  &__input{
+    width: 190px;
+    border-radius: 5px;
+  }
+  &__open-button{
+    border-radius: 5px;
+  }
+  &__items{
+    display: block;
+    width: 300px;
+    height: 150px;
+    padding: 0;
+    background: #f7f7f7;
+    border-radius: 5px;
+    overflow: auto;
+    list-style-type: none;
+    &_hidden{
+      display: none;
+      height: 0;
+    }
+  }
+  &__item{
+    height: 20%;
+    padding: 5px;
+    font-size: 1.1em;
+    box-sizing: border-box;
+    border-bottom: 1px solid #a3a3a3;
+  }
+}
