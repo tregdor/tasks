@@ -1,83 +1,126 @@
-class Dropdown{
-  constructor(initState,dropdownInput,dropdownBtn,dropdownList) {
+class Dropdown {
+  constructor(initState, dropdownInput, dropdownBtn) {
     this.state = initState;
     this.dropdownInput = dropdownInput;
     this.dropdownBtn = dropdownBtn;
-    this.dropdownList = dropdownList;
+    this.notesContainer = null;
     this.isOpen = false;
+    this.isCreatedContainer = false;
     this.notes = [];
-    this.lastSelect = '';
+    this.lastSelect = "";
   }
-  start(){
-    this.dropdownInput.addEventListener("click", () =>  this.open());
-    this.dropdownBtn.addEventListener("click", () =>  this.open());
+
+  start() {
+    this.dropdownInput.addEventListener("click", () => this.open());
+    if (this.dropdownBtn) this.dropdownBtn.addEventListener("click", () => this.open());
 
     this.dropdownInput.addEventListener("input", (e) => this.filterNotes(e));
 
     window.addEventListener(`resize`, () => this.close());
     document.onscroll = () => this.close();
-    document.addEventListener('click', (e) => {
-      if(!e.target.closest('.dropdown')){
-        this.close()
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".dropdown")) {
+        this.close();
       }
-    })
-  }
-  open(){
-    if(this.isOpen) return;
-    this.checkDistanceToBottom();
-    this.dropdownInput.focus();
-    this.dropdownInput.value = '';
-    this.dropdownList.classList.remove("dropdown__items_hidden");
+    });
 
+    this.createNotesContainer();
+    document.body.after(this.notesContainer);
+    this.isCreatedContainer = true
+  }
+
+  open() {
+    if (this.isOpen) return;
+    setTimeout(() => this.addStyle(this.notesContainer, {height: `150px`}), 10);
+    setTimeout(() => this.addStyle(this.notesContainer, {overflow: `auto`}), 300);
+    if (!this.checkDistanceToBottom()){
+      const coordinateDropdownInput = this.dropdownInput.getBoundingClientRect();
+      this.addStyle(this.notesContainer, {top: `${coordinateDropdownInput.top + 5}px`, left: `${coordinateDropdownInput.left}px`});
+    }
     this.createNotes(this.state);
     this.addNotes(this.notes);
 
-    this.isOpen = true
+    this.dropdownInput.value = "";
+    this.dropdownInput.focus();
+
+    this.isOpen = true;
   }
-  close(){
-    this.dropdownList.classList.add('dropdown__items_hidden');
+
+  close() {
     this.dropdownInput.value = this.lastSelect;
     this.isOpen = false;
+    this.addStyle(this.notesContainer, {height: '0px', overflow: 'hidden'})
   }
-  createNotes(state){
+
+  createNotesContainer() {
+    this.notesContainer = document.createElement("ul");
+    this.notesContainer.classList.add('dropdown');
+    this.addStyle(this.notesContainer, {
+      width: `${this.dropdownInput.offsetWidth + (this.dropdownBtn ? this.dropdownBtn.offsetWidth : 0)}px`,
+      height: `0`,
+      background: "#f3f3f3",
+      padding: "0px",
+      position: "absolute",
+      transition: "height .3s ease",
+      listStyleType: "none",
+      overflow: "hidden",
+    });
+  }
+
+  createNotes(state) {
     this.notes = state.map((data) => {
       let li = document.createElement("li");
       li.innerHTML = `${data.label}`;
       li.setAttribute("id", data.id);
-      li.classList.add('dropdown__item');
-      li.addEventListener('click',() => this.onChoiceNote(data.label));
+      this.addStyle(li, {display: "flex", alignItems: "center", height: "20%", padding: "0 0 0 5px"});
+      li.addEventListener("click", () => this.onChoiceNote(data.label));
       return li;
     });
   }
-  filterNotes(event){
+
+  filterNotes(event) {
     const eValue = event.target.value;
-    let notes = this.state.filter(note => note.label.indexOf(eValue) === 0);
+    let notes = this.state.filter((note) => note.label.indexOf(eValue) === 0);
     this.createNotes(notes);
-    this.addNotes(this.notes)
+    this.addNotes(this.notes);
   }
-  addNotes(notes){
+
+  addNotes(notes) {
     this.clearNotes();
     notes.map((item) => {
-      this.dropdownList.append(item);
+      this.notesContainer.append(item);
     });
   }
-  clearNotes(){
-    this.dropdownList.innerHTML = '';
+
+  clearNotes() {
+    this.notesContainer.innerHTML = "";
   }
-  onChoiceNote(data){
+
+  onChoiceNote(data) {
     this.close();
     this.dropdownInput.value = data;
-    this.lastSelect = data
+    this.lastSelect = data;
   }
-  checkDistanceToBottom(){
-    const coordinateDropdown = this.dropdownList.getBoundingClientRect();
+
+  checkDistanceToBottom() {
+    const coordinateDropdownInput = this.dropdownInput.getBoundingClientRect();
     const clientHeight = document.documentElement.clientHeight;
-    if(clientHeight - coordinateDropdown.bottom < 150){
-      this.dropdownList.style.order = '-1';
+    console.log(coordinateDropdownInput, clientHeight);
+    if (clientHeight - coordinateDropdownInput.top < 150) {
+      this.addStyle(this.notesContainer, {top: `${coordinateDropdownInput.top + 5 - 171}px`, left: `${coordinateDropdownInput.left}px`});
+      return true
+    }
+    return false
+  }
+
+  addStyle(node, styles) {
+    for (let [key, value] of Object.entries(styles)) {
+      node.style[key] = value;
     }
   }
 }
-const initState=  [
+
+const initState = [
   {
     label: "Bawcomville",
     id: 0,
@@ -101,9 +144,6 @@ const initState=  [
 ];
 const dropdownInput = document.querySelector(".dropdown__input");
 const dropdownBtn = document.querySelector(".dropdown__open-button");
-const dropdownList = document.querySelector(".dropdown__items");
-
-const dropdown = new Dropdown(initState,dropdownInput,dropdownBtn,dropdownList);
+const dropdown = new Dropdown(initState, dropdownInput,dropdownBtn);
 
 dropdown.start();
-
