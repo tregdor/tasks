@@ -1,44 +1,46 @@
 class Dropdown {
-  constructor(initState, dropdownInput, dropdownBtn) {
-    this.state = initState;
-    this.dropdownInput = dropdownInput;
-    this.dropdownBtn = dropdownBtn;
+  constructor(listItemsData, dropdownContainer) {
+    this.listItemsData = listItemsData;
     this.notesContainer = null;
     this.isOpen = false;
-    this.isCreatedContainer = false;
     this.notes = [];
-    this.lastSelect = "";
+    this.lastSelected = "";
+    this.dropdownContainer = dropdownContainer;
+    this.init();
   }
 
-  start() {
-    this.dropdownInput.addEventListener("click", () => this.open());
-    if (this.dropdownBtn) this.dropdownBtn.addEventListener("click", () => this.open());
+  render() {
+    this.renderDropdownInput();
+    this.renderDropdownButton();
+    this.renderListContainer();
+  }
+
+  init() {
+    this.render();
+
+    this.dropdownInput.addEventListener("click", () => this.openDropdownList());
+    this.dropdownBtn.addEventListener("click", () => this.openDropdownList());
 
     this.dropdownInput.addEventListener("input", (e) => this.filterNotes(e));
 
-    window.addEventListener(`resize`, () => this.close());
-    document.onscroll = () => this.close();
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".dropdown")) {
-        this.close();
+    window.addEventListener("resize", () => this.closeDropdownList());
+    document.onscroll = () => this.closeDropdownList();
+    document.addEventListener("click", ({ target }) => {
+      if (!target.closest(".dropdown")) {
+        this.closeDropdownList();
       }
     });
-
-    this.createNotesContainer();
-    document.body.after(this.notesContainer);
-    this.isCreatedContainer = true
   }
 
-  open() {
+  openDropdownList() {
     if (this.isOpen) return;
-    setTimeout(() => this.addStyle(this.notesContainer, {height: `150px`}), 10);
-    setTimeout(() => this.addStyle(this.notesContainer, {overflow: `auto`}), 300);
-    if (!this.checkDistanceToBottom()){
-      const coordinateDropdownInput = this.dropdownInput.getBoundingClientRect();
-      this.addStyle(this.notesContainer, {top: `${coordinateDropdownInput.top + 5}px`, left: `${coordinateDropdownInput.left}px`});
+    if (!this.isPlaceBelow()) {
+      this.notesContainer.classList.add("dropdown-list_open-above");
     }
-    this.createNotes(this.state);
-    this.addNotes(this.notes);
+
+    this.notesContainer.classList.remove("hidden");
+
+    this.renderNotes();
 
     this.dropdownInput.value = "";
     this.dropdownInput.focus();
@@ -46,81 +48,77 @@ class Dropdown {
     this.isOpen = true;
   }
 
-  close() {
-    this.dropdownInput.value = this.lastSelect;
+  closeDropdownList() {
+    this.dropdownInput.value = this.lastSelected;
     this.isOpen = false;
-    this.addStyle(this.notesContainer, {height: '0px', overflow: 'hidden'})
+    this.notesContainer.classList.add("hidden");
   }
 
-  createNotesContainer() {
+  renderDropdownInput() {
+    this.dropdownInput = document.createElement("input");
+    this.dropdownInput.type = "text";
+    this.dropdownInput.classList.add("dropdown__input");
+    this.dropdownContainer.append(this.dropdownInput);
+  }
+
+  renderDropdownButton() {
+    this.dropdownBtn = document.createElement("button");
+    this.dropdownBtn.type = "button";
+    this.dropdownBtn.classList.add("dropdown__open-button");
+    this.dropdownBtn.textContent = "Открыть";
+    this.dropdownContainer.append(this.dropdownBtn);
+  }
+
+  renderListContainer() {
     this.notesContainer = document.createElement("ul");
-    this.notesContainer.classList.add('dropdown');
-    this.addStyle(this.notesContainer, {
-      width: `${this.dropdownInput.offsetWidth + (this.dropdownBtn ? this.dropdownBtn.offsetWidth : 0)}px`,
-      height: `0`,
-      background: "#f3f3f3",
-      padding: "0px",
-      position: "absolute",
-      transition: "height .3s ease",
-      listStyleType: "none",
-      overflow: "hidden",
-    });
+    this.notesContainer.classList.add("dropdown-list");
+    this.notesContainer.classList.add("hidden");
+    this.dropdownContainer.append(this.notesContainer);
   }
 
-  createNotes(state) {
-    this.notes = state.map((data) => {
-      let li = document.createElement("li");
+
+  renderNotes(notes) {
+    this.clearNotes();
+    const data = notes || this.listItemsData;
+    this.notes = data.map((data) => {
+      const li = document.createElement("li");
       li.innerHTML = `${data.label}`;
       li.setAttribute("id", data.id);
-      this.addStyle(li, {display: "flex", alignItems: "center", height: "20%", padding: "0 0 0 5px"});
-      li.addEventListener("click", () => this.onChoiceNote(data.label));
+      li.classList.add("dropdown-list__item");
+      li.addEventListener("click", () => this.onSelectedNote(data.label));
       return li;
     });
-  }
 
-  filterNotes(event) {
-    const eValue = event.target.value;
-    let notes = this.state.filter((note) => note.label.indexOf(eValue) === 0);
-    this.createNotes(notes);
-    this.addNotes(this.notes);
-  }
-
-  addNotes(notes) {
-    this.clearNotes();
-    notes.map((item) => {
+    this.notes.map((item) => {
       this.notesContainer.append(item);
     });
+  }
+
+  filterNotes({ target }) {
+    const tValue = target.value;
+    const notes = this.listItemsData.filter((note) => note.label.indexOf(tValue) === 0);
+    this.renderNotes(notes);
   }
 
   clearNotes() {
     this.notesContainer.innerHTML = "";
   }
 
-  onChoiceNote(data) {
-    this.close();
+  onSelectedNote(data) {
+    this.closeDropdownList();
     this.dropdownInput.value = data;
-    this.lastSelect = data;
+    this.lastSelected = data;
   }
 
-  checkDistanceToBottom() {
+  isPlaceBelow() {
     const coordinateDropdownInput = this.dropdownInput.getBoundingClientRect();
-    const clientHeight = document.documentElement.clientHeight;
-    console.log(coordinateDropdownInput, clientHeight);
-    if (clientHeight - coordinateDropdownInput.top < 150) {
-      this.addStyle(this.notesContainer, {top: `${coordinateDropdownInput.top + 5 - 171}px`, left: `${coordinateDropdownInput.left}px`});
-      return true
-    }
-    return false
-  }
-
-  addStyle(node, styles) {
-    for (let [key, value] of Object.entries(styles)) {
-      node.style[key] = value;
-    }
+    const { clientHeight } = document.documentElement;
+    console.log(clientHeight - coordinateDropdownInput.top >= 150);
+    return clientHeight - coordinateDropdownInput.top >= 150;
   }
 }
 
-const initState = [
+const listItemsData = [
   {
     label: "Bawcomville",
     id: 0,
@@ -142,8 +140,5 @@ const initState = [
     id: 4,
   },
 ];
-const dropdownInput = document.querySelector(".dropdown__input");
-const dropdownBtn = document.querySelector(".dropdown__open-button");
-const dropdown = new Dropdown(initState, dropdownInput,dropdownBtn);
-
-dropdown.start();
+const dropdownContainer = document.querySelector(".dropdown");
+const dropdown = new Dropdown(listItemsData, dropdownContainer);
