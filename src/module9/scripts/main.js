@@ -94,8 +94,8 @@ class Dropdown {
     });
   }
 
-  filterNotes({ target }) {
-    const tValue = target.value;
+  filterNotes({ target: { value } }) {
+    const tValue = value;
     const notes = this.listItemsData.filter((note) => note.label.indexOf(tValue) === 0);
     this.renderNotes(notes);
   }
