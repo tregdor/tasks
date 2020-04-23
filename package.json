@@ -7,8 +7,8 @@
     "test": "mocha",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
-    "scss": "node-sass  --watch src/module8/scss/ -o src/module8/css/",
-    "post": "postcss --use autoprefixer -o main.css src/module8/css/main.css"
+    "scss": "node-sass  --watch src/module9/scss -o src/module9/css",
+    "post": "postcss --watch --use autoprefixer -o src/module9/css/main.css src/module9/css/"
   },
   "dependencies": {},
   "devDependencies": {
@@ -22,6 +22,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "fast-check": "^1.23.0",
+    "live-server": "^1.2.1",
     "mocha": "^7.1.1",
     "node-sass": "^4.13.1",
     "nodemon": "^2.0.2",

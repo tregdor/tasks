@@ -1,0 +1,35 @@
+.dropdown{
+  position: relative;
+}
+
+.dropdown-list {
+  width: 250px;
+  min-height: 30px;
+  max-height: 150px;
+  background: #f3f3f3;
+  padding: 0;
+  position: absolute;
+  transition: height .3s ease;
+  list-style-type: none;
+  overflow: auto;
+}
+
+.dropdown-list_open-above{
+  top: -170px;
+}
+
+.dropdown__open-button {
+  margin-left: 10px;
+}
+
+.dropdown-list__item {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 5px;
+}
+
+.hidden{
+  display: none;
+}
+
